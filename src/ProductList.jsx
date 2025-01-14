@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 function ProductList() {
     const [showCart, setShowCart] = useState(false); 
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
-    const [addedToCart, setAddedToCart] = useState({});
     const cartItems = useSelector((state) => state.cart.items);
     const totalNumOfItems = cartItems.reduce((total, item) => total + item.quantity, 0);
     
@@ -257,12 +256,7 @@ function ProductList() {
     };
 
     const handleAddToCart = (plant) => {
-        console.log('adding to cart');
-        dispatch(addItem(plant));
-        setAddedToCart((prevState) => ({
-            ...prevState,
-            [plant.name]: true,
-        }));
+        dispatch(addItem(plant));       
     };
 
 
@@ -308,7 +302,12 @@ function ProductList() {
                                 <img className='product-image' src={plant.image} alt={plant.description}/>
                                 <div className='product-price'> {plant.cost} </div>
                                 <span> {plant.description} </span>
-                                <button className='product-button' onClick={() => handleAddToCart(plant)}>Add to Cart</button>
+                                <button    
+                                    className={cartItems.find(item => item.name === plant.name) ? 'product-button added-to-cart' : 'product-button'} 
+                                    onClick={() => handleAddToCart(plant)}
+                                    disabled={cartItems.find(item => item.name === plant.name)}>
+                                        Add to Cart
+                                </button>
                             </div>
                         ))}
                     </div>
